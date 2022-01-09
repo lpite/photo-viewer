@@ -1,14 +1,68 @@
 const body = document.getElementsByTagName("body")[0];
+
+const bigView = document.createElement("div");
+bigView.className = "big-view";
+bigView.onclick = toggleBigView;
+const bigViewImage = document.createElement("img");
+bigViewImage.className = "big-view-image";
+bigViewImage.onmousedown = drapAndDropImage;
+bigViewImage.addEventListener("wheel", scaleBigViewImage);
+bigViewImage.draggable = false;
+
+bigView.appendChild(bigViewImage);
+body.appendChild(bigView);
+
+let imageScale = 1;
+
 async function main() {
-  await fetch("http://192.168.0.106:3000/img").then((res) => {
-    const json = res.json().then((re) => {
-      console.log(re);
-      re.images.forEach((img) => {
+  await fetch(`${window.location.href}img`).then((response) => {
+    response.json().then((json) => {
+      json.images.forEach((img) => {
+        const div = document.createElement("div");
         const image = document.createElement("img");
+        //сделать кнопочки удаления и тд
         image.src = img;
-        body.appendChild(image);
+        div.appendChild(image);
+        div.onclick = toggleBigView;
+
+        body.appendChild(div);
       });
     });
   });
 }
 main();
+
+function toggleBigView(e) {
+  if (e.target.src) {
+    bigViewImage.src = e.target.src.split("/")[3];
+  }
+
+  if (bigView.className === "big-view") {
+    bigView.className = "big-view open";
+    imageScale = 1;
+    setImageScale();
+  } else {
+    bigView.className = "big-view";
+  }
+}
+function scaleBigViewImage(e) {
+  if (e.deltaY < 0) {
+    //Это если вверх
+    if (imageScale < 9) {
+      imageScale += 0.2;
+    }
+  } else {
+    if (imageScale > 0.2) {
+      imageScale -= 0.2;
+    }
+  }
+  setImageScale();
+}
+
+function setImageScale(params) {
+  bigViewImage.style.transform = `scale(${imageScale})`;
+}
+function drapAndDropImage(e) {
+  e.preventDefault();
+  console.log(e);
+}
