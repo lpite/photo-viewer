@@ -13,6 +13,7 @@ bigView.appendChild(bigViewImage);
 body.appendChild(bigView);
 
 let imageScale = 1;
+let scrollY = 0;
 
 async function main() {
   await fetch(`${window.location.href}img`).then((response) => {
@@ -41,14 +42,13 @@ function toggleBigView(e) {
     bigView.className = "big-view open";
     imageScale = 1;
     setImageScale();
+    toggleBodyScroll();
   } else {
     bigView.className = "big-view";
+    toggleBodyScroll();
   }
 }
 function scaleBigViewImage(e) {
-  window.addEventListener("wheel", (e) => {
-    e.preventDefault();
-  });
   if (e.deltaY < 0) {
     //Это если вверх
     if (imageScale < 9) {
@@ -60,9 +60,6 @@ function scaleBigViewImage(e) {
     }
   }
   setImageScale();
-  window.removeEventListener("wheel", (e) => {
-    e.preventDefault();
-  });
 }
 
 function setImageScale(params) {
@@ -71,4 +68,11 @@ function setImageScale(params) {
 function drapAndDropImage(e) {
   e.preventDefault();
   console.log(e);
+}
+function toggleBodyScroll() {
+  if (body.style.overflow === "hidden") {
+    body.style.overflow = "initial";
+  } else {
+    body.style.overflow = "hidden";
+  }
 }
