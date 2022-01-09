@@ -1,10 +1,12 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import cors from "cors";
 const app = express();
 
 app.use(express.static("."));
 app.use(express.static("../storage/dcim/Camera"));
+app.use(cors());
 
 app.get("/img", (req, res) => {
   res.send({ images: ["20220109_110526.jpg"] });
