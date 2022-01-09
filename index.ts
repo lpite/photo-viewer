@@ -9,7 +9,8 @@ app.use(express.static("../storage/dcim/Camera"));
 app.use(cors());
 
 app.get("/img", (req, res) => {
-  res.send({ images: ["20220109_110526.jpg"] });
+  const files = fs.readdirSync("../storage/dcim/Camera");
+  res.send({ images: files });
 });
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./index.html"));
