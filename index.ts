@@ -10,7 +10,7 @@ app.use(cors());
 
 app.get("/img", (req, res) => {
   const files = fs.readdirSync("../storage/dcim/Camera");
-  res.send({ images: files });
+  res.send({ images: files.reverse() });
 });
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./index.html"));
