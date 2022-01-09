@@ -60,7 +60,9 @@ function scaleBigViewImage(e) {
     }
   }
   setImageScale();
-  window.removeEventListener("wheel");
+  window.removeEventListener("wheel", (e) => {
+    e.preventDefault();
+  });
 }
 
 function setImageScale(params) {
