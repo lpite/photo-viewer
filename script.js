@@ -13,7 +13,6 @@ bigView.appendChild(bigViewImage);
 body.appendChild(bigView);
 
 let imageScale = 1;
-let scrollY = 0;
 
 async function main() {
   await fetch(`${window.location.href}img`).then((response) => {
