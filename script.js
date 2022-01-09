@@ -46,9 +46,9 @@ function toggleBigView(e) {
   }
 }
 function scaleBigViewImage(e) {
-  window.addEventListener("wheel",(e)=>{
-    e.preventDefault()
-  })
+  window.addEventListener("wheel", (e) => {
+    e.preventDefault();
+  });
   if (e.deltaY < 0) {
     //Это если вверх
     if (imageScale < 9) {
@@ -60,8 +60,7 @@ function scaleBigViewImage(e) {
     }
   }
   setImageScale();
-  window.removeEventListener("wheel")
-  })
+  window.removeEventListener("wheel");
 }
 
 function setImageScale(params) {
