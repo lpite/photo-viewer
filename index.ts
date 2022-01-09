@@ -4,7 +4,7 @@ import fs from "fs";
 const app = express();
 
 app.use(express.static("."));
-app.use(express.static("./Camera"));
+app.use(express.static("../Camera"));
 
 app.get("/img", (req, res) => {
   res.send({ images: ["1.png"] });
