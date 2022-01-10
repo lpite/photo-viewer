@@ -1,18 +1,37 @@
+window.addEventListener("mousemove", (e) => {
+  if (!drag) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }
+});
+
 const body = document.getElementsByTagName("body")[0];
 
 const bigView = document.createElement("div");
 bigView.className = "big-view";
-bigView.onclick = toggleBigView;
 const bigViewImage = document.createElement("img");
 bigViewImage.className = "big-view-image";
-bigViewImage.onmousedown = drapAndDropImage;
+
 bigViewImage.addEventListener("wheel", scaleBigViewImage);
+bigViewImage.addEventListener("mousedown", dropAndDropImageStart);
+bigViewImage.addEventListener("mouseup", dropAndDragImageStop);
+bigViewImage.addEventListener("mouseleave", dropAndDragImageStop);
+bigViewImage.addEventListener("mousemove", dropAndDragImage);
 bigViewImage.draggable = false;
 
+const closeButton = document.createElement("button");
+closeButton.className = "close-button";
+closeButton.onclick = toggleBigView;
+
 bigView.appendChild(bigViewImage);
+bigView.appendChild(closeButton);
 body.appendChild(bigView);
 
 let imageScale = 1;
+
+let mouseX = 0;
+let mouseY = 0;
+let drag = false;
 
 async function main() {
   await fetch(`${window.location.href}img`).then((response) => {
@@ -20,6 +39,7 @@ async function main() {
       json.images.forEach((img) => {
         const div = document.createElement("div");
         const image = document.createElement("img");
+        image.className = "small-image";
         //сделать кнопочки удаления и тд
         image.src = img;
         div.appendChild(image);
@@ -42,11 +62,18 @@ function toggleBigView(e) {
     imageScale = 1;
     setImageScale();
     toggleBodyScroll();
+    bigViewImage.style.left = `${
+      body.clientWidth / 2 - bigViewImage.clientWidth / 2
+    }px`;
+    bigViewImage.style.top = `${
+      body.clientHeight - bigViewImage.clientHeight / 2
+    }px`;
   } else {
     bigView.className = "big-view";
     toggleBodyScroll();
   }
 }
+
 function scaleBigViewImage(e) {
   if (e.deltaY < 0) {
     //Это если вверх
@@ -64,10 +91,29 @@ function scaleBigViewImage(e) {
 function setImageScale(params) {
   bigViewImage.style.transform = `scale(${imageScale})`;
 }
-function drapAndDropImage(e) {
-  e.preventDefault();
-  console.log(e);
+let startigCoordX = 0;
+let startigCoordY = 0;
+
+function dropAndDropImageStart(e) {
+  startigCoordX = parseInt(bigViewImage.style.left);
+  startigCoordY = parseInt(bigViewImage.style.top);
+  drag = true;
 }
+function dropAndDragImageStop() {
+  drag = false;
+}
+function dropAndDragImage(e) {
+  const DRAG_SENSITIVITY = 1;
+  if (drag) {
+    bigViewImage.style.top = `${
+      startigCoordY + e.clientY * DRAG_SENSITIVITY - mouseY * DRAG_SENSITIVITY
+    }px`;
+    bigViewImage.style.left = `${
+      startigCoordX + e.clientX * DRAG_SENSITIVITY - mouseX * DRAG_SENSITIVITY
+    }px`;
+  }
+}
+
 function toggleBodyScroll() {
   if (body.style.overflow === "hidden") {
     body.style.overflow = "initial";
