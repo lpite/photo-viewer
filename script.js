@@ -9,6 +9,32 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "Tab") {
       e.preventDefault();
     }
+    let imageIndex = imagesArray.indexOf(imageSelected);
+
+    if (e.key === "ArrowLeft") {
+      if (imageIndex === 0) {
+        imageIndex = imagesArray.length - 1;
+        bigViewImage.src = imagesArray[imagesArray.length - 1];
+      } else {
+        imageIndex -= 1;
+        bigViewImage.src = imagesArray[imageIndex - 1];
+      }
+      setImageCoordinates();
+    }
+    if (e.key === "ArrowRight") {
+      if (imageIndex === imagesArray[imagesArray.length - 1]) {
+        bigViewImage.src = imagesArray[0];
+        imageIndex = 0;
+      } else {
+        bigViewImage.src = imagesArray[imageIndex + 1];
+        imageIndex++;
+      }
+      setImageCoordinates();
+    }
+    imageSelected = imagesArray[imageIndex];
+    if (e.key === "Escape") {
+      bigView.className = "big-view";
+    }
   }
 });
 
@@ -18,9 +44,9 @@ const mainElement = document.getElementsByTagName("main")[0];
 
 const bigView = document.createElement("div");
 bigView.className = "big-view";
+
 const bigViewImage = document.createElement("img");
 bigViewImage.className = "big-view-image";
-
 bigViewImage.addEventListener("wheel", scaleBigViewImage);
 bigViewImage.addEventListener("mousedown", dropAndDropImageStart);
 bigViewImage.addEventListener("mouseup", dropAndDragImageStop);
@@ -37,6 +63,8 @@ bigView.appendChild(closeButton);
 mainElement.appendChild(bigView);
 
 let imageScale = 1;
+let imagesArray = [];
+let imageSelected = "";
 
 let mouseX = 0;
 let mouseY = 0;
@@ -45,6 +73,8 @@ let drag = false;
 async function main() {
   await fetch(`${window.location.href}img`).then((response) => {
     response.json().then((json) => {
+      imagesArray = json.images;
+
       json.images.forEach((img) => {
         const div = document.createElement("div");
         div.className = "small-image-div";
@@ -55,7 +85,7 @@ async function main() {
         image.src = img;
         image.onclick = toggleBigView;
         div.addEventListener("keydown", (e) => {
-          if (e.key === " ") {
+          if (e.key === " " || e.key === "Enter") {
             image.click();
           }
         });
@@ -75,23 +105,22 @@ async function main() {
 main();
 
 function toggleBigView(e) {
+  let imageSrc = "";
   if (e.target.src) {
-    bigViewImage.src = e.target.src.split("/")[3];
+    imageSrc = e.target.src.split("/")[3];
   }
+  bigViewImage.src = imageSrc;
 
   if (bigView.className === "big-view") {
     bigView.className = "big-view open";
     imageScale = 1;
     setImageScale();
     toggleBodyScroll();
-    bigViewImage.style.left = `${
-      window.screen.availWidth / 2 - bigViewImage.clientWidth / 2
-    }px`;
-    bigViewImage.style.top = `${
-      window.screen.availHeight / 2 - bigViewImage.clientHeight / 2
-    }px`;
+    setImageCoordinates();
+    imageSelected = imageSrc;
   } else {
     bigView.className = "big-view";
+    imageSelected = "";
     toggleBodyScroll();
   }
 }
@@ -148,4 +177,12 @@ async function deleteImage(img) {
     await fetch(`${window.location.href}delete/${img}`);
     window.location.reload();
   }
+}
+function setImageCoordinates() {
+  bigViewImage.style.left = `${
+    window.screen.availWidth / 2 - bigViewImage.clientWidth / 2
+  }px`;
+  bigViewImage.style.top = `${
+    window.screen.availHeight / 2 - bigViewImage.clientHeight / 2
+  }px`;
 }
