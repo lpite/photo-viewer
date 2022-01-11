@@ -15,7 +15,8 @@
       "strictBindCallApply": true,
       "strictFunctionTypes":true,
       "strictPropertyInitialization":true,
-      "strictNullChecks": true
+      "strictNullChecks": true,
+      "allowSyntheticDefaultImports":true
   },
   "include": [
       "*.ts"

@@ -14,6 +14,8 @@ window.addEventListener("keydown", (e) => {
 
 const body = document.getElementsByTagName("body")[0];
 
+const mainElement = document.getElementsByTagName("main")[0];
+
 const bigView = document.createElement("div");
 bigView.className = "big-view";
 const bigViewImage = document.createElement("img");
@@ -32,7 +34,7 @@ closeButton.onclick = toggleBigView;
 
 bigView.appendChild(bigViewImage);
 bigView.appendChild(closeButton);
-body.appendChild(bigView);
+mainElement.appendChild(bigView);
 
 let imageScale = 1;
 
@@ -57,9 +59,15 @@ async function main() {
             image.click();
           }
         });
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "small-image-div-button";
+        deleteButton.tabIndex = "-1";
+        deleteButton.textContent = "Удалить";
+        deleteButton.onclick = () => deleteImage(img);
+        div.appendChild(deleteButton);
         div.appendChild(image);
 
-        body.appendChild(div);
+        mainElement.appendChild(div);
       });
     });
   });
@@ -133,5 +141,11 @@ function toggleBodyScroll() {
     body.style.overflow = "initial";
   } else {
     body.style.overflow = "hidden";
+  }
+}
+async function deleteImage(img) {
+  if (window.confirm("Удалить?")) {
+    await fetch(`${window.location.href}delete/${img}`);
+    window.location.reload();
   }
 }
