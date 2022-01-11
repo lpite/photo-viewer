@@ -63,10 +63,10 @@ function toggleBigView(e) {
     setImageScale();
     toggleBodyScroll();
     bigViewImage.style.left = `${
-      body.clientWidth / 2 - bigViewImage.clientWidth / 2
+      window.screen.availWidth / 2 - bigViewImage.clientWidth / 2
     }px`;
     bigViewImage.style.top = `${
-      body.clientHeight - bigViewImage.clientHeight / 2
+      window.screen.availHeight / 2 - bigViewImage.clientHeight / 2
     }px`;
   } else {
     bigView.className = "big-view";
