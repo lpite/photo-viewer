@@ -4,6 +4,13 @@ window.addEventListener("mousemove", (e) => {
     mouseY = e.clientY;
   }
 });
+window.addEventListener("keydown", (e) => {
+  if (bigView.className === "big-view open") {
+    if (e.key === "Tab") {
+      e.preventDefault();
+    }
+  }
+});
 
 const body = document.getElementsByTagName("body")[0];
 
@@ -38,12 +45,19 @@ async function main() {
     response.json().then((json) => {
       json.images.forEach((img) => {
         const div = document.createElement("div");
+        div.className = "small-image-div";
+        div.tabIndex = "0";
         const image = document.createElement("img");
         image.className = "small-image";
         //сделать кнопочки удаления и тд
         image.src = img;
+        image.onclick = toggleBigView;
+        div.addEventListener("keydown", (e) => {
+          if (e.key === " ") {
+            image.click();
+          }
+        });
         div.appendChild(image);
-        div.onclick = toggleBigView;
 
         body.appendChild(div);
       });

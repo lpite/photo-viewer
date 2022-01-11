@@ -16,12 +16,21 @@
     }
     .small-image {
       height: 200px;
-      background-color: black;
       object-fit: cover;
-      margin: 5px;
       cursor: pointer;
       user-select: none;
     }
+    .small-image-div {
+      padding: 5px;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .small-image-div:focus-visible {
+      background-color: violet;
+    }
+
     .big-view {
       position: fixed;
       width: 100%;
