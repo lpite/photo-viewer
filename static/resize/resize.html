@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="./cropper.min.css"
+      integrity="sha512-6QxSiaKfNSQmmqwqpTNyhHErr+Bbm8u8HHSiinMEz0uimy9nu7lc/2NaXJiUJj2y4BApd5vgDjSHyLzC8nP6Ng=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="imageWrapper">
+      <img id="image" src="../1.png" />
+    </div>
+    <div>
+      <button class="ready-button">Готово</button>
+      <input
+        type="range"
+        class="rotate-image"
+        max="20"
+        min="-20"
+        step="0.01"
+        value="0"
+      />
+    </div>
+  </body>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 10px;
+    }
+    .ready-button {
+      margin: 10px;
+      width: 100px;
+      height: 50px;
+    }
+    .imageWrapper {
+      width: 50%;
+      height: 50%;
+    }
+    img {
+      display: block;
+
+      /* This rule is very important, please don't ignore this */
+      max-width: 100%;
+    }
+  </style>
+  <script src="./cropper.min.js"></script>
+  <script>
+    const image = document.getElementById("image");
+    image.src = `/${window.location.toString().split("/")[4]}`;
+    const readyButton = document.querySelector(".ready-button");
+
+    const link = document.createElement("a");
+    link.text = "Скачать фотку";
+    link.download = true;
+    readyButton.addEventListener("click", (e) => {
+      link.href = cropper.getCroppedCanvas().toDataURL();
+      console.log(cropper.getCroppedCanvas().toDataURL());
+      document.getElementsByTagName("body")[0].appendChild(link);
+    });
+    const cropper = new Cropper(image, {
+      viewMode: 1,
+      highlight: true,
+      background: true,
+      modal: true,
+      guides: true,
+    });
+    let imageRotation = 0;
+    const rotateImage = document.querySelector(".rotate-image");
+    rotateImage.value = "0";
+    rotateImage.addEventListener("input", (e) => {
+      console.log(e.target.value);
+      cropper.rotateTo(parseInt(e.target.value) / 6);
+    });
+    console.log(cropper.getData());
+  </script>
+</html>

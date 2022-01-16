@@ -75,13 +75,13 @@ async function main() {
     response.json().then((json) => {
       imagesArray = json.images;
 
-      json.images.forEach((img) => {
+      json.images.slice(0, 10).forEach((img) => {
         const div = document.createElement("div");
         div.className = "small-image-div";
         div.tabIndex = "0";
         const image = document.createElement("img");
+        image.height = 300;
         image.className = "small-image";
-        //сделать кнопочки удаления и тд
         image.src = img;
         image.onclick = toggleBigView;
         div.addEventListener("keydown", (e) => {
@@ -89,12 +89,20 @@ async function main() {
             image.click();
           }
         });
+        const wrapperForButton = document.createElement("div");
         const deleteButton = document.createElement("button");
         deleteButton.className = "small-image-div-button";
         deleteButton.tabIndex = "-1";
         deleteButton.textContent = "Удалить";
         deleteButton.onclick = () => deleteImage(img);
-        div.appendChild(deleteButton);
+        const resizeLink = document.createElement("a");
+        resizeLink.target = "_blank";
+        resizeLink.href = `/resize/${img}`;
+        resizeLink.textContent = "Обрезать";
+
+        wrapperForButton.appendChild(resizeLink);
+        wrapperForButton.appendChild(deleteButton);
+        div.appendChild(wrapperForButton);
         div.appendChild(image);
 
         mainElement.appendChild(div);

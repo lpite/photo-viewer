@@ -4,14 +4,15 @@ import fs from "fs";
 import cors from "cors";
 const app = express();
 
-app.use(express.static("."));
+app.use(express.static("static"));
 app.use(express.static("../storage/dcim/Camera"));
 app.use(cors());
 
 app.get("/", (req, res) => {
-  console.log("html");
-
-  res.sendFile(path.join(__dirname, "./index.html"));
+  res.sendFile(path.join(__dirname, "./static/index.html"));
+});
+app.get("/resize/:image", (req, res) => {
+  res.sendFile(path.join(__dirname, "./static/resize/resize.html"));
 });
 app.get("/img", (req, res) => {
   console.log("images");
