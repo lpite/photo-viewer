@@ -4,29 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="./cropper.min.css"
-      integrity="sha512-6QxSiaKfNSQmmqwqpTNyhHErr+Bbm8u8HHSiinMEz0uimy9nu7lc/2NaXJiUJj2y4BApd5vgDjSHyLzC8nP6Ng=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <link rel="stylesheet" href="cropper.min.css" />
     <title>Document</title>
   </head>
   <body>
     <div class="imageWrapper">
       <img id="image" src="../1.png" />
     </div>
-    <div>
+    <div class="controls">
+      <input type="range" class="rotate-image" max="20" min="-20" step="0.01" />
+
       <button class="ready-button">Готово</button>
-      <input
-        type="range"
-        class="rotate-image"
-        max="20"
-        min="-20"
-        step="0.01"
-        value="0"
-      />
     </div>
   </body>
   <style>
@@ -34,17 +22,30 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+      flex-direction: row;
       padding: 10px;
+    }
+    .controls {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      position: relative;
+      margin-left: 40px;
     }
     .ready-button {
       margin: 10px;
       width: 100px;
       height: 50px;
     }
+    .rotate-image {
+      width: 250px;
+      transform: rotate(90deg);
+      position: absolute;
+      left: -150px;
+    }
     .imageWrapper {
-      width: 50%;
-      height: 50%;
+      width: 40%;
+      height: 40%;
     }
     img {
       display: block;
@@ -53,7 +54,7 @@
       max-width: 100%;
     }
   </style>
-  <script src="./cropper.min.js"></script>
+  <script src="cropper.min.js"></script>
   <script>
     const image = document.getElementById("image");
     image.src = `/${window.location.toString().split("/")[4]}`;
@@ -68,19 +69,25 @@
       document.getElementsByTagName("body")[0].appendChild(link);
     });
     const cropper = new Cropper(image, {
-      viewMode: 1,
+      viewMode: 0,
       highlight: true,
       background: true,
       modal: true,
       guides: true,
+      autoCrop: true,
+      ready() {
+        const rotation = cropper.getData().rotate;
+        rotateImage.max = rotation + 10;
+        rotateImage.min = rotation - 10;
+        rotateImage.value = rotation;
+        console.log(cropper.getData().rotate);
+      },
     });
-    let imageRotation = 0;
     const rotateImage = document.querySelector(".rotate-image");
-    rotateImage.value = "0";
+
     rotateImage.addEventListener("input", (e) => {
       console.log(e.target.value);
-      cropper.rotateTo(parseInt(e.target.value) / 6);
+      cropper.rotateTo(parseFloat(e.target.value));
     });
-    console.log(cropper.getData());
   </script>
 </html>
