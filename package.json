@@ -1,5 +1,5 @@
 {
-  "name": "sync-photos",
+  "name": "photo-viewer",
   "version": "1.0.0",
   "main": "index.js",
   "author": "lpite <farionsasa@gmail.com>",
